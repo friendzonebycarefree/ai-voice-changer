@@ -1,0 +1,3 @@
+-r requirements.txt
+# Native build: Visual Studio C++20 Build Tools and Windows SDK.
+# Installer: Inno Setup 7 (ISCC.exe). Runtime is bundled by package_runtime.py.

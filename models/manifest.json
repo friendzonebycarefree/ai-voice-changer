@@ -1,0 +1,98 @@
+{
+  "version": 2,
+  "assets": {
+    "seed.weights": {
+      "path": "seed/model.pth",
+      "size": 142112203,
+      "sha256": "c853ea578b409f625f961bcb15d5cff1f8ef9a75f3209ec21d9b7c73ab422e88",
+      "license": "GPL-3.0",
+      "origin": "Plachta/Seed-VC@257283f9f41585055e8f858fba4fd044e5caed6e"
+    },
+    "seed.config": {
+      "path": "seed/config.yml",
+      "size": 2100,
+      "sha256": "e4f152f9c7b8924f82c9661cd28737204dd93368871a6feaec36437cb7138e74",
+      "license": "GPL-3.0",
+      "origin": "Plachta/Seed-VC@257283f9f41585055e8f858fba4fd044e5caed6e"
+    },
+    "seed.camp": {
+      "path": "seed/campplus.bin",
+      "size": 28036335,
+      "sha256": "3388cf5fd3493c9ac9c69851d8e7a8badcfb4f3dc631020c4961371646d5ada8",
+      "license": "Apache-2.0",
+      "origin": "funasr/campplus@e4b6ede7ce16997aff4ae69fbca1f0175e2afede"
+    },
+    "seed.hift": {
+      "path": "seed/hift.pt",
+      "size": 81896716,
+      "sha256": "91e679b6ca1eff71187ffb4f3ab0444935594cdcc20a9bd12afad111ef8d6012",
+      "license": "Apache-2.0",
+      "origin": "FunAudioLLM/CosyVoice-300M@24c40509c3c5ea6fe06b5f8790ff99e3714a6bee"
+    },
+    "seed.encoder.weights": {
+      "path": "seed/encoder/pytorch_model.bin",
+      "size": 665022871,
+      "sha256": "25bd4cd39b993d08c539da9df0dc77b9f840bd9e7ebb4c479b61e0030e333b13",
+      "license": "Apache-2.0",
+      "origin": "facebook/wav2vec2-xls-r-300m@1a640f32ac3e39899438a2931f9924c02f080a54",
+      "modification": "Exact first-12-layer inference subset; discarded layers 12..23, no quantization."
+    },
+    "seed.encoder.config": {
+      "path": "seed/encoder/config.json",
+      "size": 1644,
+      "sha256": "c5a525a67c95ba4575e18e3b0edcbf3a071b5e8b23ace24075e36998be3138e5",
+      "license": "Apache-2.0",
+      "origin": "facebook/wav2vec2-xls-r-300m@1a640f32ac3e39899438a2931f9924c02f080a54",
+      "modification": "Exact first-12-layer inference subset; discarded layers 12..23, no quantization."
+    },
+    "seed.encoder.preprocessor": {
+      "path": "seed/encoder/preprocessor_config.json",
+      "size": 212,
+      "sha256": "a2254a5b58f72cd4de3632f8eee64f3f098b7c1402128d2f419e7d00ae13e335",
+      "license": "Apache-2.0",
+      "origin": "facebook/wav2vec2-xls-r-300m@1a640f32ac3e39899438a2931f9924c02f080a54"
+    },
+    "rvc.pitch": {
+      "path": "rvc/rmvpe.pt",
+      "size": 181189687,
+      "sha256": "a5ed4719f59085d1affc5d81354c70828c740584f2d24e782523345a6a278962",
+      "license": "MIT",
+      "origin": "KoeAI/llvc_models@ebfe8c0fdeb974a7eeb463b3abbc8ce42a0e3851"
+    },
+    "seed.hift.config": {
+      "path": "seed/hift.yml",
+      "size": 671,
+      "sha256": "be32816a79625f99bb2e5aa5a49b935779771db462575bfff6a1c41d56b86093",
+      "license": "GPL-3.0",
+      "origin": "seed-vc@51383efd921027683c89e5348211d93ff12ac2a8"
+    },
+    "female.reference": {
+      "path": "references/natural.wav",
+      "size": 85164,
+      "sha256": "f053890e05c5971c0a2fa1ccbeb20586a6f16bc5e4a030f68b106946f9eec737",
+      "license": "CC-BY-4.0",
+      "origin": "LibriSpeech speaker 1919, utterance 142785-0000, via KoeAI/LLVC@1627c5d358cf9bb2b92b0ccc513d8b36807c923d"
+    },
+    "rvc.weights": {
+      "path": "rvc/model.pth",
+      "size": 56267516,
+      "sha256": "0b4e86d55db0a7db600fbcb9d2f2226731274ad90096d56bf7ba75f391815384",
+      "license": "MIT",
+      "origin": "KoeAI/llvc_models@ebfe8c0fdeb974a7eeb463b3abbc8ce42a0e3851"
+    },
+    "rvc.encoder.weights": {
+      "path": "rvc/encoder/pytorch_model.bin",
+      "size": 378342945,
+      "sha256": "d8dd400e054ddf4e6be75dab5a2549db748cc99e756a097c496c099f65a4854e",
+      "license": "MIT",
+      "origin": "lengyue233/content-vec-best@ab04aa7067b99ee05cc82499bc64916b980a1967"
+    },
+    "rvc.encoder.config": {
+      "path": "rvc/encoder/config.json",
+      "size": 1388,
+      "sha256": "2ddde063b795d38d9051a7215a092fecf4cfe148b54251e38de51d88d356898b",
+      "license": "MIT",
+      "origin": "lengyue233/content-vec-best@ab04aa7067b99ee05cc82499bc64916b980a1967"
+    }
+  }
+}

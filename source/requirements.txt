@@ -1,0 +1,16 @@
+# Install torch/torchaudio from the official cu128 index first; see README.
+torch==2.8.0
+torchaudio==2.8.0
+numpy==2.4.6
+scipy==1.17.1
+soundfile==0.14.0
+soxr==1.1.0
+psutil==7.2.2
+PySide6-Essentials==6.12.0
+transformers==4.46.3
+librosa==0.10.2
+munch==4.0.0
+einops==0.8.0
+accelerate==1.15.0
+safetensors>=0.4.3
+packaging>=24
