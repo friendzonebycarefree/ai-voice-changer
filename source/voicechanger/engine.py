@@ -66,8 +66,8 @@ class AudioWorker(QThread):
         streams=[];files=[];backend=None;capture=output=monitor=None
         try:
             cfg=self.settings.validate()
-            if not torch.cuda.is_available() or cfg.backend=='cpu':
-                raise RuntimeError('Для живого режима нужна NVIDIA/CUDA. На этом ПК доступна конверсия WAV на CPU.')
+            using_cuda=torch.cuda.is_available() and cfg.backend!='cpu'
+            compute_label='CUDA' if using_cuda else 'CPU'
             native=NativeAudio(native_path());devices={d['id']:d for d in native.devices()}
             if cfg.microphone not in devices or devices[cfg.microphone]['flow']!='capture':raise ValueError('Выберите физический микрофон')
             if cfg.output and (cfg.output not in devices or devices[cfg.output]['flow']!='render'):
@@ -127,7 +127,7 @@ class AudioWorker(QThread):
                 if capture is None:
                     capture=native.open(True,cfg.microphone);streams.append(capture);reset()
                     self.active.emit(True)
-                    self.status.emit(f'Активно · {backend.name} · CUDA · блок {block_ms:.0f} мс'+(' · ЗАПИСЬ ВКЛ' if files else ''))
+                    self.status.emit(f'Активно · {backend.name} · {compute_label} · блок {block_ms:.0f} мс'+(' · ЗАПИСЬ ВКЛ' if files else ''))
                 cap=capture.stats()
                 if cap['error']:raise RuntimeError('Микрофон отключён. Выход заглушён.')
                 drops=(cap['dropped_samples'],cap['discontinuities'])
@@ -160,7 +160,7 @@ class AudioWorker(QThread):
                         dropped_capture_samples=cap['dropped_samples'],capture_discontinuities=cap['discontinuities'],
                         output_dropped_samples=out.get('dropped_samples',0),output_silence_samples=out.get('silence_samples',0),
                         process_rss_mib=process.memory_info().rss/2**20,process_cpu_percent=process.cpu_percent(),
-                        gpu_allocated_mib=torch.cuda.memory_allocated()/2**20,gpu_reserved_mib=torch.cuda.memory_reserved()/2**20,
+                        gpu_allocated_mib=(torch.cuda.memory_allocated()/2**20 if using_cuda else 0),gpu_reserved_mib=(torch.cuda.memory_reserved()/2**20 if using_cuda else 0),
                         stage_timings_ms=backend.last_timings.copy(),e2e_measured_ms=None,processing_paused=False)
                     self.metrics.emit(last_data);last_report=time.perf_counter()
         except Cancelled:

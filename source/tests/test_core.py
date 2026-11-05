@@ -42,4 +42,3 @@ class CoreTests(unittest.TestCase):
             self.assertLessEqual(stats['queued_samples'],28800);self.assertGreater(stats['dropped_samples'],0)
             stream.mute(True);self.assertEqual(stream.stats()['queued_samples'],0)
         finally:stream.close()
-

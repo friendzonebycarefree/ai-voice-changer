@@ -10,12 +10,16 @@ class WorkerTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):cls.app=QCoreApplication.instance() or QCoreApplication([])
 
-    def test_no_cuda_never_opens_microphone(self):
-        worker=AudioWorker(Settings());failures=[];worker.failure.connect(failures.append)
+    def test_cpu_can_reach_model_loading_without_opening_capture(self):
+        worker=AudioWorker(Settings(microphone='mic',output='ears'));failures=[];worker.failure.connect(failures.append)
+        class Devices:
+            def __init__(self,*args):pass
+            def devices(self):return [dict(id='mic',flow='capture',name='Mic'),dict(id='ears',flow='render',name='Headphones')]
+            def open(self,*args):raise AssertionError('Capture should wait for model load')
         with tempfile.TemporaryDirectory() as folder:
-            with patch('voicechanger.engine.torch.cuda.is_available',return_value=False),patch('voicechanger.engine.NativeAudio') as native,patch('voicechanger.engine.user_dir',lambda:Path(folder)):
-                worker.run();native.assert_not_called()
-        self.assertTrue(failures and 'CUDA' in failures[0])
+            with patch('voicechanger.engine.torch.cuda.is_available',return_value=False),patch('voicechanger.engine.NativeAudio',Devices),patch('voicechanger.engine.load_backend',side_effect=RuntimeError('Reached CPU model load')) as load,patch('voicechanger.engine.user_dir',lambda:Path(folder)):
+                worker.run();load.assert_called_once()
+        self.assertEqual(failures,['Reached CPU model load'])
 
     def test_model_failure_mutes_and_closes_without_source_passthrough(self):
         worker=AudioWorker(Settings(microphone='mic',output='cable'))

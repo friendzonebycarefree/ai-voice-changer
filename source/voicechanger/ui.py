@@ -54,6 +54,13 @@ def icon(active=False):
     return QIcon(pix)
 
 
+class DeviceCombo(QComboBox):
+    def showPopup(self):
+        refresh=getattr(self,'refresh_callback',None)
+        if refresh:refresh()
+        super().showPopup()
+
+
 class AdvancedWindow(QMainWindow):
     def __init__(self):
         super().__init__();self.setWindowTitle('AI Voice Changer · CUDA / WAV');self.setWindowIcon(icon())
@@ -110,7 +117,7 @@ class AdvancedWindow(QMainWindow):
         self.model_choice=QComboBox();self.model_choice.addItem('Seed-VC · основной','seed');self.model_choice.addItem('RVC · управление F0','rvc')
         self.profile=QComboBox();self.profile.addItems([*PROFILES,*self.custom_profiles])
         self.mode=QComboBox();self.mode.addItems(MODES)
-        self.mic=QComboBox();self.output=QComboBox();self.headphones=QComboBox()
+        self.mic=DeviceCombo();self.output=DeviceCombo();self.headphones=QComboBox()
         for text,field in [('Нейросеть',self.model_choice),('Профиль',self.profile),('Качество',self.mode),
                            ('Микрофон',self.mic),('Виртуальный выход',self.output),('Наушники',self.headphones)]:form.addRow(text,field)
         if not self.cuda_available:
@@ -407,20 +414,16 @@ class MainWindow(AdvancedWindow):
         self.simple_form=QFormLayout();self.simple_form.setSpacing(16)
         self.mode.setItemText(0,'Быстрое');self.mode.setItemText(1,'Сбалансированное');self.mode.setItemText(2,'Высокое')
         self.simple_form.addRow('Качество',self.mode)
-        if self.cuda_available:
-            self.simple_form.addRow('Вход',self.mic);self.mic.show()
-            self.simple_form.addRow('Выход',self.output);self.output.show()
-        else:
-            self.file_input=QPushButton('Выбрать запись…');self.file_output=QPushButton('Куда сохранить…')
-            self.input_path='';self.output_path=''
-            self.file_input.clicked.connect(self.choose_input);self.file_output.clicked.connect(self.choose_output)
-            self.simple_form.addRow('Вход',self.file_input);self.simple_form.addRow('Выход',self.file_output)
+        self.simple_form.addRow('Вход · микрофон',self.mic);self.mic.show()
+        self.simple_form.addRow('Выход · наушники',self.output);self.output.show()
+        self.mic.refresh_callback=self.refresh_devices;self.output.refresh_callback=self.refresh_devices
         self.mode.show();box.addLayout(self.simple_form);self.start.show();box.addWidget(self.start)
         self.status_label.show();box.addWidget(self.status_label)
         self.file_progress.show();box.addWidget(self.file_progress)
         box.addStretch();layout.addWidget(self.panel)
         self.model_choice.setCurrentIndex(0);self.record.setChecked(False);self.monitor.setChecked(False)
         self.update_availability()
+        if not self.cuda_available:self.status_label.setText('Готово · CPU: возможна заметная задержка')
 
     def refresh_devices(self):
         if self.worker and self.worker.isRunning():return
@@ -447,9 +450,30 @@ class MainWindow(AdvancedWindow):
         if hasattr(self,'panel'):
             busy=bool(self.offline_job) or bool(self.worker and self.worker.isRunning())
             self.mode.setEnabled(not busy)
+            self.mic.setEnabled(not busy);self.output.setEnabled(not busy)
             if hasattr(self,'file_input'):
                 self.file_input.setEnabled(not busy);self.file_output.setEnabled(not busy)
             if not busy:self.start.setText('Запустить')
+
+    def primary_action(self,*args):
+        self.toggle_start()
+
+    def toggle_start(self):
+        if self.worker and self.worker.isRunning():
+            self.worker.stop();self.start.setEnabled(False);self.start.setText('Остановка…');return
+        if self.jobs:
+            self.status_label.setText('Подготовка приложения…');return
+        try:
+            cfg=self.collect()
+            if not cfg.microphone:raise ValueError('Выберите микрофон')
+            if not cfg.output:raise ValueError('Выберите наушники или другое устройство вывода')
+            cfg.save();self.settings=cfg
+            self.worker=AudioWorker(cfg,False,False)
+            self.error_text='';self.worker.status.connect(self.status_label.setText)
+            self.worker.metrics.connect(self.show_metrics);self.worker.failure.connect(self.show_failure)
+            self.worker.active.connect(self.active_changed);self.worker.finished.connect(self.stopped)
+            self.worker.start();self.update_availability()
+        except Exception as error:self.status_label.setText(str(error))
 
     def choose_input(self):
         path,_=QFileDialog.getOpenFileName(self,'Вход','','Аудио (*.wav *.flac)')
