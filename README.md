@@ -3,6 +3,18 @@
 Экспериментальное локальное приложение для Windows: мужской → женский голос.
 Python 3.11, PyTorch/CUDA, PySide6, нативный C++20/WASAPI.
 
+## Скачать полную программу для Windows
+
+Скачайте установщик и все четыре части данных в одну папку, затем запустите **AI-Voice-Changer-Setup-0.3.1.exe**. Комплект включает Python, модели и CUDA-библиотеки; общий размер около 6,58 ГБ.
+
+- [AI-Voice-Changer-Setup-0.3.1.exe](https://github.com/friendzonebycarefree/ai-voice-changer/releases/download/v0.3.1/AI-Voice-Changer-Setup-0.3.1.exe)
+- [AI-Voice-Changer-Setup-0.3.1-1.bin](https://github.com/friendzonebycarefree/ai-voice-changer/releases/download/v0.3.1/AI-Voice-Changer-Setup-0.3.1-1.bin)
+- [AI-Voice-Changer-Setup-0.3.1-2.bin](https://github.com/friendzonebycarefree/ai-voice-changer/releases/download/v0.3.1/AI-Voice-Changer-Setup-0.3.1-2.bin)
+- [AI-Voice-Changer-Setup-0.3.1-3.bin](https://github.com/friendzonebycarefree/ai-voice-changer/releases/download/v0.3.1/AI-Voice-Changer-Setup-0.3.1-3.bin)
+- [AI-Voice-Changer-Setup-0.3.1-4.bin](https://github.com/friendzonebycarefree/ai-voice-changer/releases/download/v0.3.1/AI-Voice-Changer-Setup-0.3.1-4.bin)
+
+Установка, запуск установленного EXE, диагностика WASAPI и удаление проверены на машине разработки. Драйвер NVIDIA и VB-CABLE устанавливаются отдельно при необходимости.
+
 ## Версия 0.3.1
 
 Один экран: **качество, вход, выход, запуск**. На NVIDIA — микрофон и устройство
